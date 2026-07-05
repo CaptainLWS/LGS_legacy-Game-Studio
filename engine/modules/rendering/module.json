@@ -1,0 +1,6 @@
+{
+  "name": "rendering",
+  "version": "0.1.0",
+  "description": "Rendering module (Canvas renderer)",
+  "entry": "index.js"
+}
