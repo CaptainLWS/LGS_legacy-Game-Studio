@@ -1,6 +1,7 @@
 {
   "name": "networking",
   "version": "0.1.0",
+  "engineCompatibility": "^0.1.0",
   "description": "Networking module (Spider-Frame adapter placeholder)",
   "entry": "index.js"
 }

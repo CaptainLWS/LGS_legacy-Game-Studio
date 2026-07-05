@@ -1,6 +1,7 @@
 {
   "name": "ui",
   "version": "0.1.0",
+  "engineCompatibility": "^0.1.0",
   "description": "UI / HUD module",
   "entry": "index.js"
 }
