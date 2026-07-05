@@ -1,61 +1,76 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<svg
+  width="900"
+  height="900"
+  viewBox="0 0 900 900"
+  xmlns="http://www.w3.org/2000/svg"
+>
+
+  <!-- Background -->
+  <rect width="900" height="900" fill="#000000"/>
+
+  <!-- Golden radiant halo -->
   <defs>
-    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#ffed4e;stop-opacity:1" />
-    </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
+    <radialGradient id="halo" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#FFF4C2"/>
+      <stop offset="40%" stop-color="#F5C84A"/>
+      <stop offset="75%" stop-color="#D4A63A"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
   </defs>
-  
-  <!-- Background Circle -->
-  <circle cx="100" cy="100" r="95" fill="#0f0f0f" stroke="url(#goldGradient)" stroke-width="2"/>
-  
-  <!-- Inner Circle Glow -->
-  <circle cx="100" cy="100" r="85" fill="none" stroke="url(#goldGradient)" stroke-width="1" opacity="0.3"/>
-  
-  <!-- Lion Head - Simplified -->
-  <g filter="url(#glow)">
-    <!-- Mane Outline -->
-    <circle cx="100" cy="95" r="45" fill="#1a1a1a" stroke="url(#goldGradient)" stroke-width="1.5"/>
-    
-    <!-- Head -->
-    <circle cx="100" cy="100" r="32" fill="#000" stroke="url(#goldGradient)" stroke-width="1"/>
-    
-    <!-- Eyes -->
-    <circle cx="92" cy="92" r="4" fill="url(#goldGradient)"/>
-    <circle cx="108" cy="92" r="4" fill="url(#goldGradient)"/>
-    <circle cx="92" cy="92" r="2" fill="#000"/>
-    <circle cx="108" cy="92" r="2" fill="#000"/>
-    
-    <!-- Snout -->
-    <ellipse cx="100" cy="108" rx="8" ry="10" fill="#222" stroke="url(#goldGradient)" stroke-width="0.5"/>
-    
-    <!-- Nose -->
-    <ellipse cx="100" cy="105" rx="3" ry="4" fill="#ffd700"/>
-    
-    <!-- Mouth/Teeth -->
-    <path d="M 97 110 Q 100 112 103 110" stroke="url(#goldGradient)" stroke-width="1" fill="none"/>
-    <path d="M 96 111 L 97 113 M 100 112 L 100 114 M 104 111 L 105 113" stroke="url(#goldGradient)" stroke-width="0.8"/>
-  </g>
-  
-  <!-- Radiant Glow Lines -->
-  <g stroke="url(#goldGradient)" stroke-width="1" opacity="0.4">
-    <line x1="100" y1="20" x2="100" y2="35" stroke-linecap="round"/>
-    <line x1="100" y1="165" x2="100" y2="180" stroke-linecap="round"/>
-    <line x1="20" y1="100" x2="35" y2="100" stroke-linecap="round"/>
-    <line x1="165" y1="100" x2="180" y2="100" stroke-linecap="round"/>
-    <line x1="32" y1="32" x2="43" y2="43" stroke-linecap="round"/>
-    <line x1="157" y1="157" x2="168" y2="168" stroke-linecap="round"/>
-    <line x1="168" y1="32" x2="157" y2="43" stroke-linecap="round"/>
-    <line x1="43" y1="157" x2="32" y2="168" stroke-linecap="round"/>
-  </g>
-  
-  <!-- Legacy Text -->
-  <text x="100" y="155" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="url(#goldGradient)" letter-spacing="1">LGS</text>
+
+  <!-- Outer ring -->
+  <circle
+    cx="450"
+    cy="350"
+    r="260"
+    fill="none"
+    stroke="#D4AF37"
+    stroke-width="40"
+  />
+
+  <!-- Inner glow -->
+  <circle
+    cx="450"
+    cy="350"
+    r="220"
+    fill="url(#halo)"
+  />
+
+  <!-- Panther silhouette placeholder -->
+  <!-- Replace the 'd' attribute with your traced panther path -->
+  <path
+    d="M 300 300 C 320 240 380 200 450 210
+       C 520 220 580 260 600 320
+       C 620 380 600 430 550 460
+       C 500 490 430 490 380 460
+       C 330 430 300 380 300 300 Z"
+    fill="#000000"
+  />
+
+  <!-- LEGACY text -->
+  <text
+    x="450"
+    y="650"
+    text-anchor="middle"
+    font-family="Arial Black, Impact, sans-serif"
+    font-size="110"
+    fill="#C0C0C0"
+    letter-spacing="10"
+  >
+    LEGACY
+  </text>
+
+  <!-- GAME STUDIOS text -->
+  <text
+    x="450"
+    y="720"
+    text-anchor="middle"
+    font-family="Arial, sans-serif"
+    font-size="48"
+    fill="#D4AF37"
+    letter-spacing="8"
+  >
+    GAME STUDIOS
+  </text>
+
 </svg>
