@@ -1,6 +1,7 @@
 {
   "name": "audio",
-  "version": "0.1.0",
-  "description": "Audio module (WebAudio placeholder)",
+  "version": "0.1.1",
+  "engineCompatibility": "^0.1.0",
+  "description": "Audio module (WebAudio oscillator placeholder)",
   "entry": "index.js"
 }

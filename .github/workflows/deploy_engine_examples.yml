@@ -1,0 +1,30 @@
+name: Deploy engine examples
+on:
+  push:
+    branches:
+      - feature/engine-structure
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install deps
+        run: npm ci
+        working-directory: .
+        continue-on-error: true
+
+      - name: Deploy engine folder to gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4.4.0
+        with:
+          branch: gh-pages
+          folder: engine
+          token: ${{ secrets.GITHUB_TOKEN }}
