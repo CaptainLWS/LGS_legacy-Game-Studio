@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeFormHandling();
     initializeScrollEffects();
     initializeInteractiveElements();
+    initializeCardReveal();
 });
 
 // ============================================
@@ -19,7 +20,7 @@ function initializeNavigation() {
     
     if (hamburger) {
         hamburger.addEventListener('click', function() {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            navLinks.classList.toggle('active');
             toggleHamburgerAnimation(this);
         });
     }
@@ -28,7 +29,7 @@ function initializeNavigation() {
     const navItems = document.querySelectorAll('.nav-links a');
     navItems.forEach(item => {
         item.addEventListener('click', function() {
-            navLinks.style.display = 'none';
+            navLinks.classList.remove('active');
             if (hamburger) {
                 hamburger.classList.remove('active');
             }
@@ -45,28 +46,27 @@ function toggleHamburgerAnimation(hamburger) {
 // ============================================
 
 function initializeFormHandling() {
-    const contactForm = document.querySelector('.contact-form');
+    const contactForm = document.getElementById('contactForm');
     
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             // Get form data
-            const formData = new FormData(this);
-            const data = {
-                name: this.querySelector('input[type="text"]').value,
-                email: this.querySelector('input[type="email"]').value,
-                message: this.querySelector('textarea').value
-            };
+            const name = this.querySelector('input[name="name"]').value;
+            const email = this.querySelector('input[name="email"]').value;
+            const subject = this.querySelector('input[name="subject"]').value;
+            const message = this.querySelector('textarea[name="message"]').value;
+
+            const data = { name, email, subject, message };
 
             // Validate form
             if (!validateForm(data)) {
-                showNotification('Please fill in all fields correctly.', 'error');
+                showNotification('Please fill in all required fields correctly.', 'error');
                 return;
             }
 
-            // Here you would typically send the data to a server
-            // For now, we'll just show a success message
+            // Submit form (would normally send to backend)
             console.log('Form Data:', data);
             showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
             
@@ -88,24 +88,12 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196F3'};
-        color: white;
-        border-radius: 4px;
-        z-index: 10000;
-        animation: slideIn 0.3s ease-out;
-        font-weight: 500;
-    `;
     
     document.body.appendChild(notification);
     
     // Remove notification after 3 seconds
     setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease-out';
+        notification.classList.add('notification-exit');
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
@@ -115,32 +103,49 @@ function showNotification(message, type = 'info') {
 // ============================================
 
 function initializeScrollEffects() {
-    // Parallax effect for hero section
+    // Parallax effect for hero section using requestAnimationFrame
     const hero = document.querySelector('.hero');
     
-    window.addEventListener('scroll', function() {
-        if (hero) {
-            const scrolled = window.pageYOffset;
-            hero.style.backgroundPosition = `0 ${scrolled * 0.5}px`;
-        }
-
-        // Reveal elements on scroll
-        revealElementsOnScroll();
-    });
+    if (hero) {
+        let ticking = false;
+        
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.pageYOffset;
+                    // Use transform instead of background-position for better performance
+                    hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+    }
 }
 
-function revealElementsOnScroll() {
+// ============================================
+// CARD REVEAL WITH INTERSECTION OBSERVER
+// ============================================
+
+function initializeCardReveal() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal');
+                cardObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe all cards
     const cards = document.querySelectorAll('.game-card, .production-card, .stat');
-    
     cards.forEach(card => {
-        const cardTop = card.getBoundingClientRect().top;
-        const cardBottom = card.getBoundingClientRect().bottom;
-        
-        // If card is in viewport
-        if (cardTop < window.innerHeight && cardBottom > 0) {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }
+        cardObserver.observe(card);
     });
 }
 
@@ -149,15 +154,15 @@ function revealElementsOnScroll() {
 // ============================================
 
 function initializeInteractiveElements() {
-    // Button hover effects
+    // Button hover effects using CSS classes
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach(btn => {
         btn.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
+            this.classList.add('btn-hovered');
         });
         
         btn.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
+            this.classList.remove('btn-hovered');
         });
     });
 
@@ -165,8 +170,9 @@ function initializeInteractiveElements() {
     const gameCards = document.querySelectorAll('.game-card');
     gameCards.forEach(card => {
         card.addEventListener('click', function() {
-            console.log('Game clicked:', this.querySelector('h3').textContent);
-            // Add your game launch logic here
+            const gameTitle = this.querySelector('h3').textContent;
+            console.log('Game clicked:', gameTitle);
+            showNotification(`Thanks for your interest in ${gameTitle}!`, 'info');
         });
     });
 }
@@ -192,11 +198,64 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // ============================================
-// ANIMATIONS
+// ANIMATIONS & STYLES
 // ============================================
 
 const style = document.createElement('style');
 style.textContent = `
+    /* Notification Styles */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        color: white;
+        border-radius: 4px;
+        z-index: 10000;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        max-width: 300px;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .notification-success {
+        background: #4caf50;
+    }
+
+    .notification-error {
+        background: #f44336;
+    }
+
+    .notification-info {
+        background: #2196F3;
+    }
+
+    .notification-exit {
+        animation: slideOut 0.3s ease-out;
+    }
+
+    /* Card Reveal Animation */
+    .game-card, .production-card, .stat {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .game-card.reveal, .production-card.reveal, .stat.reveal {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Button Hover State */
+    .btn-hovered {
+        transform: translateY(-2px) !important;
+    }
+
+    /* Mobile Menu Active State */
+    .nav-links.active {
+        display: flex !important;
+    }
+
     @keyframes slideIn {
         from {
             transform: translateX(400px);
@@ -218,42 +277,21 @@ style.textContent = `
             opacity: 0;
         }
     }
-
-    .game-card, .production-card, .stat {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
 `;
 document.head.appendChild(style);
 
 // ============================================
-// PERFORMANCE OPTIMIZATION
+// LAZY LOAD IMAGES
 // ============================================
 
-// Debounce scroll events
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-const debouncedScroll = debounce(revealElementsOnScroll, 100);
-window.addEventListener('scroll', debouncedScroll);
-
-// Lazy load images if needed
 if ('IntersectionObserver' in window) {
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
-                img.src = img.dataset.src;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                }
                 observer.unobserve(img);
             }
         });
