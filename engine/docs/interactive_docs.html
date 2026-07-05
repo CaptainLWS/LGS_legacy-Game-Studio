@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Engine Examples - Interactive Docs</title>
+  <style>
+    body{font-family:sans-serif;background:#0f1113;color:#ddd;margin:0;padding:12px}
+    header{display:flex;align-items:center;gap:12px}
+    iframe{width:100%;height:520px;border:1px solid #23252a;border-radius:6px}
+    .panel{margin-top:12px}
+  </style>
+</head>
+<body>
+  <header>
+    <h1 style="color:#ffd700">Legacy Engine — Interactive Docs</h1>
+  </header>
+
+  <p>Use the embedded interactive example to experiment with the engine. The example includes buttons to auto-load modules, spawn NPCs, and pause the simulation.</p>
+
+  <div class="panel">
+    <iframe src="/engine/examples/interactive.html" title="Interactive Example"></iframe>
+  </div>
+
+  <div class="panel">
+    <h2>How it works</h2>
+    <ul>
+      <li>The engine is a tiny ECS-style runtime (<code>engine/engine.js</code>).</li>
+      <li>Modules live in <code>engine/modules/*</code> and export an <code>init(engine, options)</code> function.</li>
+      <li>The module loader (<code>engine/module_loader.js</code>) can auto-load modules based on <code>engine/modules/modules.json</code>.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="/engine/CORE_SPEC.md">CORE_SPEC.md</a></li>
+      <li><a href="/engine/modules/modules.json">modules.json</a></li>
+      <li><a href="/engine/tests/module_loader_integration.html">Module loader integration test</a></li>
+    </ul>
+  </div>
+</body>
+</html>
