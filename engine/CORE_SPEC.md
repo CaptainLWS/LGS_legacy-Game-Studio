@@ -21,26 +21,71 @@ Example:
 - Velocity component: { vx, vy }
 - MovementSystem: finds entities with Transform + Velocity and integrates position.
 
-## Module Boundaries
+### Component & System interface signatures (JavaScript examples)
 
-Each module is a separately-addressable folder that exposes a public interface (API) and an initialization hook. Modules should not directly mutate other module internals — interactions happen through defined APIs, events, or the ECS data model.
+Components are plain objects. Example component factories:
 
-Core modules (each under engine/modules/*):
-- rendering: scenes, camera, materials, render targets. Exposes: createScene(), createCamera(), registerDrawable(), renderer.init(canvas).
-- physics: movement integrator, collision detection and resolution, physics substeps. Exposes: addCollider(), stepPhysics(dt).
-- audio: sound playback, spatialization, sound events. Exposes: playSound(id, opts), registerAudioSource(entityId, props).
-- input: keyboard/mouse/controller mapping, action binding. Exposes: bindAction(actionName, callback), getActionState(actionName).
-- ui: HUD and overlay systems, UI layout primitives. Exposes: createHUD(container), registerWidget(widget).
-- networking: multiplayer hooks, state replication, Spider‑Frame-ready adapters. Exposes: connect(endpoint), sendReliable(message), onRemoteState(handler).
+- Transform
+function Transform(x=0,y=0,rotation=0,scale=1) { return { x, y, rotation, scale }; }
 
-Modules must include a version identifier in a module manifest (simple JSON) and support initialization with a common Engine context object.
+- Velocity
+function Velocity(vx=0,vy=0) { return { vx, vy }; }
+
+System shape:
+
+const MovementSystem = {
+  // called each frame with engine context and delta time (seconds)
+  update(engine, dt) {
+    const ents = engine.getEntitiesWith('position','velocity');
+    for (const e of ents) {
+      e.position.x += e.velocity.x * dt;
+      e.position.y += e.velocity.y * dt;
+    }
+  }
+};
+
+Engine.registerSystem = function(system) { /* push to systems list */ };
+
+## Module Boundaries & Manifests
+
+Each module is a separately-addressable folder that exposes a public interface (API) and an initialization hook (`init(engine, options)`). Modules should not directly mutate other module internals — interactions happen through defined APIs, events, or the ECS data model.
 
 Module manifest example (engine/modules/rendering/module.json):
+
 {
   "name": "rendering",
   "version": "0.1.0",
   "description": "Rendering module (Canvas/ WebGL fallback)",
   "entry": "index.js"
+}
+
+Public API examples (JS signatures):
+
+Rendering module (index.js):
+export function init(engine, options = {}) {
+  // returns an object with the public API
+  return {
+    createCamera: function(opts) { /* ... */ },
+    registerDrawable: function(entityId, drawCallback) { /* ... */ }
+  };
+}
+
+Physics module (index.js):
+export function init(engine, options = {}) {
+  return {
+    addCollider(entityId, collider) {},
+    removeCollider(entityId) {},
+    stepPhysics(dt) {}
+  };
+}
+
+Networking module:
+export function init(engine, options = {}) {
+  return {
+    connect(url) {},
+    sendState(state) {},
+    onRemoteState(cb) {}
+  };
 }
 
 ## Plugin Architecture
@@ -69,6 +114,16 @@ engine.registerPlugin({
 3. Modules initialize and register systems/components.
 4. Engine enters main loop: input -> systems -> physics -> scripts -> rendering -> audio -> networking.
 
+Example: using the tiny module loader provided
+
+import { createEngine } from './engine.js';
+import { autoLoadAll } from './module_loader.js';
+
+const engine = createEngine('game');
+// load all modules described in engine/modules/modules.json
+const modules = await autoLoadAll(engine);
+// modules.rendering, modules.physics etc. now contain module APIs
+
 ## Conventions
 
 - Keep Components purely data-oriented.
@@ -81,4 +136,4 @@ The repository includes a small runtime (engine/engine.js) that demonstrates a t
 
 ---
 
-Document created as part of the engine structure initiative.
+Document updated to include interface signatures and examples.
