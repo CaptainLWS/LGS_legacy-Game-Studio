@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Engine Examples - Interactive</title>
+  <style>
+    body{font-family:sans-serif;background:#0f1113;color:#ddd;margin:0;padding:12px}
+    #controls{position:fixed;right:12px;top:12px;width:220px;background:#111;padding:12px;border-radius:8px;border:1px solid #222}
+    button{display:block;margin:6px 0;padding:8px;width:100%}
+    canvas{display:block;margin:40px auto;border:1px solid #222}
+  </style>
+</head>
+<body>
+  <h1 style="color:#ffd700">Legacy Engine — Interactive Examples</h1>
+  <div id="controls">
+    <button id="load-modules">Auto-load Modules</button>
+    <button id="spawn-npc">Spawn NPC</button>
+    <button id="clear-npcs">Clear NPCs</button>
+    <button id="toggle-pause">Pause</button>
+    <div style="margin-top:8px;color:#aaa;font-size:12px">Click buttons to interact with the running engine.</div>
+  </div>
+  <canvas id="game" width="800" height="480"></canvas>
+  <script type="module">
+    import { createEngine } from '../engine.js';
+    import { autoLoadAll } from '../module_loader.js';
+
+    const engine = createEngine('game');
+    let modules = {};
+    let paused = false;
+
+    document.getElementById('load-modules').addEventListener('click', async ()=>{
+      modules = await autoLoadAll(engine);
+      alert('Modules loaded: ' + Object.keys(modules).join(', '));
+    });
+
+    document.getElementById('spawn-npc').addEventListener('click', ()=>{
+      const canvas = document.getElementById('game');
+      engine.addEntity({ position:{x:Math.random()*canvas.width,y:Math.random()*canvas.height}, velocity:{x:(Math.random()-0.5)*80,y:(Math.random()-0.5)*80}, color:'#7de', radius:5 });
+    });
+
+    document.getElementById('clear-npcs').addEventListener('click', ()=>{
+      // remove all non-player entities
+      for (const e of Array.from(engine.entities.entries())) {
+        const [id, obj] = e;
+        if (!obj.player) engine.removeEntity(id);
+      }
+    });
+
+    document.getElementById('toggle-pause').addEventListener('click', ()=>{
+      paused = !paused; engine._running = !paused; document.getElementById('toggle-pause').textContent = paused ? 'Resume' : 'Pause';
+    });
+
+  </script>
+</body>
+</html>
