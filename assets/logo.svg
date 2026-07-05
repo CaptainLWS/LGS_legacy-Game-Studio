@@ -1,80 +1,74 @@
 <svg
-  width="800"
-  height="800"
-  viewBox="0 0 800 800"
+  width="900"
+  height="900"
+  viewBox="0 0 900 900"
   xmlns="http://www.w3.org/2000/svg"
 >
 
   <!-- Background -->
-  <rect width="800" height="800" fill="#000000" />
+  <rect width="900" height="900" fill="#000000"/>
 
-  <!-- Golden circular frame -->
+  <!-- Golden radiant halo -->
+  <defs>
+    <radialGradient id="halo" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#FFF4C2"/>
+      <stop offset="40%" stop-color="#F5C84A"/>
+      <stop offset="75%" stop-color="#D4A63A"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer ring -->
   <circle
-    cx="400"
-    cy="280"
-    r="220"
+    cx="450"
+    cy="350"
+    r="260"
     fill="none"
     stroke="#D4AF37"
-    stroke-width="30"
+    stroke-width="40"
   />
 
-  <!-- Radial glow behind panther -->
-  <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#FFE9A3" />
-    <stop offset="60%" stop-color="#D4AF37" />
-    <stop offset="100%" stop-color="#000000" />
-  </radialGradient>
-
+  <!-- Inner glow -->
   <circle
-    cx="400"
-    cy="280"
-    r="190"
-    fill="url(#goldGlow)"
+    cx="450"
+    cy="350"
+    r="220"
+    fill="url(#halo)"
   />
 
-  <!-- Panther placeholder silhouette (replace with real path) -->
+  <!-- Panther silhouette placeholder -->
+  <!-- Replace the 'd' attribute with your traced panther path -->
   <path
-    d="M260 260
-       C280 220 330 200 380 205
-       C430 210 470 235 490 270
-       C510 305 505 340 480 360
-       C460 375 430 380 400 375
-       C370 370 340 355 320 340
-       C295 320 270 300 260 260 Z"
+    d="M 300 300 C 320 240 380 200 450 210
+       C 520 220 580 260 600 320
+       C 620 380 600 430 550 460
+       C 500 490 430 490 380 460
+       C 330 430 300 380 300 300 Z"
     fill="#000000"
-  />
-
-  <!-- Panther mouth highlight (simple accent) -->
-  <path
-    d="M380 290
-       C395 285 410 285 425 295
-       C430 305 430 315 420 325
-       C405 330 390 330 380 320 Z"
-    fill="#AA0000"
   />
 
   <!-- LEGACY text -->
   <text
-    x="400"
-    y="520"
+    x="450"
+    y="650"
     text-anchor="middle"
-    font-family="Impact, Arial Black, sans-serif"
-    font-size="80"
+    font-family="Arial Black, Impact, sans-serif"
+    font-size="110"
     fill="#C0C0C0"
-    letter-spacing="8"
+    letter-spacing="10"
   >
     LEGACY
   </text>
 
   <!-- GAME STUDIOS text -->
   <text
-    x="400"
-    y="580"
+    x="450"
+    y="720"
     text-anchor="middle"
     font-family="Arial, sans-serif"
-    font-size="32"
+    font-size="48"
     fill="#D4AF37"
-    letter-spacing="6"
+    letter-spacing="8"
   >
     GAME STUDIOS
   </text>
