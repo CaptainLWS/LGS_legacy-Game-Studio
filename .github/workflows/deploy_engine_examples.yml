@@ -8,6 +8,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,10 +20,16 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install deps
-        run: npm ci
+      - name: Install deps (use lockfile if present)
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            echo "Using npm ci (lockfile found)"
+            npm ci
+          else
+            echo "No lockfile found — using npm install"
+            npm install
+          fi
         working-directory: .
-        continue-on-error: true
 
       - name: Deploy engine folder to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4.4.0
