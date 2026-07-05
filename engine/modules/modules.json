@@ -1,0 +1,8 @@
+[
+  { "name": "rendering", "entry": "index.js" },
+  { "name": "physics", "entry": "index.js" },
+  { "name": "audio", "entry": "index.js" },
+  { "name": "input", "entry": "index.js" },
+  { "name": "ui", "entry": "index.js" },
+  { "name": "networking", "entry": "index.js" }
+]
