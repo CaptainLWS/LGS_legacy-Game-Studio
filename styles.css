@@ -63,11 +63,19 @@ body {
     font-weight: bold;
     color: var(--primary-color);
     text-decoration: none;
+    transition: var(--transition);
+}
+
+.logo:hover {
+    color: #ffed4e;
 }
 
 .logo-img {
     height: 40px;
     width: 40px;
+    border-radius: 50%;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 3px;
 }
 
 .nav-links {
@@ -81,10 +89,26 @@ body {
     text-decoration: none;
     transition: var(--transition);
     font-weight: 500;
+    position: relative;
 }
 
 .nav-links a:hover {
     color: var(--primary-color);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
 }
 
 .hamburger {
@@ -203,6 +227,8 @@ body {
     transition: var(--transition);
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .btn-primary {
@@ -267,6 +293,7 @@ body {
     transition: var(--transition);
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .game-card::before {
@@ -309,6 +336,13 @@ body {
 .game-card p {
     color: #b0b0b0;
     margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.game-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .tag {
@@ -343,6 +377,8 @@ body {
     padding: 2.5rem 2rem;
     text-align: center;
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
 }
 
 .production-card:hover {
@@ -364,6 +400,21 @@ body {
 
 .production-card p {
     color: #b0b0b0;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.production-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    display: inline-block;
+}
+
+.production-link:hover {
+    color: #ffed4e;
+    transform: translateX(5px);
 }
 
 /* ============================================
@@ -407,6 +458,7 @@ body {
     padding: 0.8rem 0;
     color: #b0b0b0;
     border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    line-height: 1.6;
 }
 
 .features-list li strong {
@@ -494,10 +546,11 @@ body {
     color: var(--primary-color);
     text-decoration: none;
     transition: var(--transition);
+    font-weight: 500;
 }
 
 .info-item a:hover {
-    text-decoration: underline;
+    color: #ffed4e;
 }
 
 .social-links {
@@ -509,16 +562,19 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     background: rgba(255, 215, 0, 0.1);
     border-radius: 50%;
     transition: var(--transition);
+    color: var(--primary-color);
+    font-size: 1.2rem;
 }
 
 .social-links a:hover {
     background: var(--primary-color);
     color: var(--text-dark);
+    transform: translateY(-3px);
 }
 
 .contact-form {
@@ -562,13 +618,76 @@ body {
 .footer {
     background: #0a0a0a;
     border-top: 2px solid var(--primary-color);
-    padding: 2rem 0;
+    padding: 3rem 0 1rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.footer-section p {
+    color: #b0b0b0;
+    font-size: 0.9rem;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-section a:hover {
+    color: var(--primary-color);
+}
+
+.footer-socials {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 50%;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.footer-socials a:hover {
+    background: var(--primary-color);
+    color: var(--text-dark);
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 215, 0, 0.1);
+    padding-top: 2rem;
     text-align: center;
 }
 
-.footer p {
+.footer-bottom p {
     color: #b0b0b0;
     margin: 0.5rem 0;
+    font-size: 0.9rem;
 }
 
 /* ============================================
