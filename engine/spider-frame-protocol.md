@@ -16,7 +16,29 @@ Spider‑Frame is Legacy Game Studios' binary network protocol for real-time mul
 ## Protocol Structure
 
 ### Message Format
-┌─────────────────────────────────────────────────────────┐ │ Frame Header (16 bytes) │ ├─────────────────────────────────────────────────────────┤ │ 1. Magic Number (2 bytes) = 0x5346 ('SF') │ │ 2. Version (1 byte) = 1 │ │ 3. Message Type (1 byte) │ │ 4. Sequence Number (4 bytes) - Packet ordering │ │ 5. Timestamp (8 bytes) - Milliseconds since epoch │ ├─────────────────────────────────────────────────────────┤ │ Credential Token (32 bytes) │ │ - JWT signature of player identity │ ├─────────────────────────────────────────────────────────┤ │ Payload (variable) │ │ - Length-prefixed (4 bytes) │ │ - Gzip-compressed JSON or binary │ ├─────────────────────────────────────────────────────────┤ │ Checksum (4 bytes) - CRC32 │ └─────────────────────────────────────────────────────────┘
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ Frame Header (16 bytes)                                 │
+├─────────────────────────────────────────────────────────┤
+│ 1. Magic Number (2 bytes) = 0x5346 ('SF')              │
+│ 2. Version (1 byte) = 1                                 │
+│ 3. Message Type (1 byte)                                │
+│ 4. Sequence Number (4 bytes) - Packet ordering          │
+│ 5. Timestamp (8 bytes) - Milliseconds since epoch       │
+├─────────────────────────────────────────────────────────┤
+│ Credential Token (32 bytes)                             │
+│ - JWT signature of player identity                      │
+├─────────────────────────────────────────────────────────┤
+│ Payload (variable)                                      │
+│ - Length-prefixed (4 bytes)                             │
+│ - Gzip-compressed JSON or binary                        │
+├─────────────────────────────────────────────────────────┤
+│ Checksum (4 bytes) - CRC32                              │
+└─────────────────────────────────────────────────────────┘
+
+Total Minimum: 56 bytes per packet
+```
 
 ### Message Types
 
@@ -35,11 +57,28 @@ Spider‑Frame is Legacy Game Studios' binary network protocol for real-time mul
 ---
 
 ## Credential Token Format
-JWT Header: { "alg": "HS256", "typ": "JWT", "kid": "spider-frame-v1" }
 
-JWT Payload: { "sub": "player_uuid_v4", "session_id": "session_uuid_v4", "orbit": "earth", // earth | mars | luna | cosmic "iat": 1688169600, "exp": 1688256000, "scopes": ["gameplay", "voice_chat"] }
+```
+JWT Header:
+{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "spider-frame-v1"
+}
 
-Signature: HMAC_SHA256(header.payload, SERVER_SECRET_KEY)
+JWT Payload:
+{
+  "sub": "player_uuid_v4",
+  "session_id": "session_uuid_v4",
+  "orbit": "earth",  // earth | mars | luna | cosmic
+  "iat": 1688169600,
+  "exp": 1688256000,
+  "scopes": ["gameplay", "voice_chat"]
+}
+
+Signature:
+HMAC_SHA256(header.payload, SERVER_SECRET_KEY)
+```
 
 ---
 
@@ -89,17 +128,26 @@ Signature: HMAC_SHA256(header.payload, SERVER_SECRET_KEY)
     }
   ]
 }
-Failure Matrix & Resilience
-Network Failure Detection
-Code
+```
+
+---
+
+## Failure Matrix & Resilience
+
+### Network Failure Detection
+
+```
 Latency Bucket | Action | Max Retries | Timeout
 ─────────────────────────────────────────────────
 0-50ms         | Send   | 3           | 500ms
 50-200ms       | Send   | 2           | 1000ms
 200-500ms      | Send   | 1           | 2000ms (Mars)
 500ms+         | Queue  | 0           | Adaptive
-Multi-Orbit Routing
-Code
+```
+
+### Multi-Orbit Routing
+
+```
 Earth Network:
 - Primary latency: 0-50ms
 - Fallback: TCP/HTTP long-poll
@@ -116,13 +164,20 @@ Luna Network:
 Cosmic Network (Future):
 - Federation protocol
 - Cross-orbit message routing
-Security Layer
-Encryption
-Channel: TLS 1.3 over WebSocket or native TCP
-Payload: AES-256-GCM (optional, for sensitive game state)
-Token: HMAC-SHA256
-Anomaly Detection
-Code
+```
+
+---
+
+## Security Layer
+
+### Encryption
+- **Channel**: TLS 1.3 over WebSocket or native TCP
+- **Payload**: AES-256-GCM (optional, for sensitive game state)
+- **Token**: HMAC-SHA256
+
+### Anomaly Detection
+
+```
 Rules:
 1. Duplicate sequence numbers → Drop packet, log
 2. Timestamp deviation > 5s → Reject, sync clock
@@ -130,15 +185,21 @@ Rules:
 4. Rapid position delta (teleport) → Verify, flag
 5. Token expiration → Force re-auth
 6. Invalid checksum → Drop, request retransmit
-LLM-Based Analysis
-Server-side LLM monitors packet patterns for:
+```
 
-Account takeover attempts
-Cheat detection (impossible moves)
-DDoS patterns
-Exploit signatures
-Example: Login Flow
-Code
+### LLM-Based Analysis
+
+Server-side LLM monitors packet patterns for:
+- Account takeover attempts
+- Cheat detection (impossible moves)
+- DDoS patterns
+- Exploit signatures
+
+---
+
+## Example: Login Flow
+
+```
 Client → Server: LOGIN packet
   {
     "username": "player_name",
@@ -159,23 +220,39 @@ Client ↔ Server: Begin STATE_UPDATE exchanges
   Frequency: 30 packets/sec
   Sequence: Numbered
   Timestamp: Synchronized
-Performance Targets
-Metric	Target	Notes
-Latency (E→E)	<50ms	Earth-to-Earth
-Latency (E→M)	1-3 minutes	Physical limit
-Throughput	100-500 Kbps/player	Compressed state
-Packet Loss Tolerance	<2%	With retry logic
-Clock Skew Tolerance	±5s	Auto-correct
-Max Players/Server	256	With load balancing
-Future Extensions
-WebRTC Data Channel: Ultra-low latency for critical updates
-Quantum-Resistant Crypto: Post-quantum key exchange
-Cross-Dimensional Routing: Cosmic OS integration
-Hierarchical Authority: Distributed gamestate ownership
-Time Dilation: Relativistic physics simulation
-Reference Implementation
-See UUGE_core.js → NetworkingLayer class for JavaScript implementation.
+```
 
-Document Version: 1.0
-Last Updated: July 2026
-Maintained by: Legacy Game Studios Engineering
+---
+
+## Performance Targets
+
+| Metric | Target | Notes |
+|--------|--------|-------|
+| Latency (E→E) | <50ms | Earth-to-Earth |
+| Latency (E→M) | 1-3 minutes | Physical limit |
+| Throughput | 100-500 Kbps/player | Compressed state |
+| Packet Loss Tolerance | <2% | With retry logic |
+| Clock Skew Tolerance | ±5s | Auto-correct |
+| Max Players/Server | 256 | With load balancing |
+
+---
+
+## Future Extensions
+
+1. **WebRTC Data Channel**: Ultra-low latency for critical updates
+2. **Quantum-Resistant Crypto**: Post-quantum key exchange
+3. **Cross-Dimensional Routing**: Cosmic OS integration
+4. **Hierarchical Authority**: Distributed gamestate ownership
+5. **Time Dilation**: Relativistic physics simulation
+
+---
+
+## Reference Implementation
+
+See `UUGE_core.js` → `NetworkingLayer` class for JavaScript implementation.
+
+---
+
+**Document Version**: 1.0  
+**Last Updated**: July 2026  
+**Maintained by**: Legacy Game Studios Engineering
