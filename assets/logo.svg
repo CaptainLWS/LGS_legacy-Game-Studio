@@ -1,0 +1,76 @@
+<svg
+  width="900"
+  height="900"
+  viewBox="0 0 900 900"
+  xmlns="http://www.w3.org/2000/svg"
+>
+
+  <!-- Background -->
+  <rect width="900" height="900" fill="#000000"/>
+
+  <!-- Golden radiant halo -->
+  <defs>
+    <radialGradient id="halo" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#FFF4C2"/>
+      <stop offset="40%" stop-color="#F5C84A"/>
+      <stop offset="75%" stop-color="#D4A63A"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer ring -->
+  <circle
+    cx="450"
+    cy="350"
+    r="260"
+    fill="none"
+    stroke="#D4AF37"
+    stroke-width="40"
+  />
+
+  <!-- Inner glow -->
+  <circle
+    cx="450"
+    cy="350"
+    r="220"
+    fill="url(#halo)"
+  />
+
+  <!-- Panther silhouette placeholder -->
+  <!-- Replace the 'd' attribute with your traced panther path -->
+  <path
+    d="M 300 300 C 320 240 380 200 450 210
+       C 520 220 580 260 600 320
+       C 620 380 600 430 550 460
+       C 500 490 430 490 380 460
+       C 330 430 300 380 300 300 Z"
+    fill="#000000"
+  />
+
+  <!-- LEGACY text -->
+  <text
+    x="450"
+    y="650"
+    text-anchor="middle"
+    font-family="Arial Black, Impact, sans-serif"
+    font-size="110"
+    fill="#C0C0C0"
+    letter-spacing="10"
+  >
+    LEGACY
+  </text>
+
+  <!-- GAME STUDIOS text -->
+  <text
+    x="450"
+    y="720"
+    text-anchor="middle"
+    font-family="Arial, sans-serif"
+    font-size="48"
+    fill="#D4AF37"
+    letter-spacing="8"
+  >
+    GAME STUDIOS
+  </text>
+
+</svg>
