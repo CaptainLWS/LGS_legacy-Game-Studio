@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,7 +22,6 @@ jobs:
       - name: Install deps
         run: npm ci
         working-directory: .
-        continue-on-error: true
 
       - name: Deploy engine folder to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4.4.0
