@@ -1,6 +1,7 @@
 {
   "name": "physics",
-  "version": "0.1.0",
-  "description": "Physics module (simple integrator)",
+  "version": "0.1.1",
+  "engineCompatibility": "^0.1.0",
+  "description": "Physics module (simple integrator & basic collision)",
   "entry": "index.js"
 }
