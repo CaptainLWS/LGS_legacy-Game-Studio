@@ -1,0 +1,6 @@
+{
+  "name": "audio",
+  "version": "0.1.0",
+  "description": "Audio module (WebAudio placeholder)",
+  "entry": "index.js"
+}
