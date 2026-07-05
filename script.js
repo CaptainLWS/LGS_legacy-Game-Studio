@@ -45,28 +45,27 @@ function toggleHamburgerAnimation(hamburger) {
 // ============================================
 
 function initializeFormHandling() {
-    const contactForm = document.querySelector('.contact-form');
+    const contactForm = document.getElementById('contactForm');
     
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             // Get form data
-            const formData = new FormData(this);
-            const data = {
-                name: this.querySelector('input[type="text"]').value,
-                email: this.querySelector('input[type="email"]').value,
-                message: this.querySelector('textarea').value
-            };
+            const name = this.querySelector('input[name="name"]').value;
+            const email = this.querySelector('input[name="email"]').value;
+            const subject = this.querySelector('input[name="subject"]').value;
+            const message = this.querySelector('textarea[name="message"]').value;
+
+            const data = { name, email, subject, message };
 
             // Validate form
             if (!validateForm(data)) {
-                showNotification('Please fill in all fields correctly.', 'error');
+                showNotification('Please fill in all required fields correctly.', 'error');
                 return;
             }
 
-            // Here you would typically send the data to a server
-            // For now, we'll just show a success message
+            // Submit form (would normally send to backend)
             console.log('Form Data:', data);
             showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
             
@@ -88,17 +87,22 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
+    
+    const bgColor = type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196F3';
+    
     notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
         padding: 15px 25px;
-        background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196F3'};
+        background: ${bgColor};
         color: white;
         border-radius: 4px;
         z-index: 10000;
         animation: slideIn 0.3s ease-out;
         font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        max-width: 300px;
     `;
     
     document.body.appendChild(notification);
@@ -165,8 +169,9 @@ function initializeInteractiveElements() {
     const gameCards = document.querySelectorAll('.game-card');
     gameCards.forEach(card => {
         card.addEventListener('click', function() {
-            console.log('Game clicked:', this.querySelector('h3').textContent);
-            // Add your game launch logic here
+            const gameTitle = this.querySelector('h3').textContent;
+            console.log('Game clicked:', gameTitle);
+            showNotification(`Thanks for your interest in ${gameTitle}!`, 'info');
         });
     });
 }
@@ -253,7 +258,9 @@ if ('IntersectionObserver' in window) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
-                img.src = img.dataset.src;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                }
                 observer.unobserve(img);
             }
         });
